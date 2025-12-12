@@ -48,26 +48,36 @@ public class BST {
      */
     public boolean search(int val) {
         // TODO: Complete the search function
-
+        // Call the helper function
         return helperSearch(root, val);
     }
 
+    // Helper function
     public  boolean helperSearch(BSTNode n, int val) {
+        // If the tree itself is empty
         if (n == null) {
+            // Then value can't be there
             return false;
         }
+
+        // If we have the value, return true because it is in it
         if (n.getVal() == val) {
             return true;
         }
 
+        // If the root of the smaller tree is less than value, then we will go right
+        // Then we will rerun this function to see if it is there
         if (n.getVal() < val) {
             return helperSearch(n.getRight(), val);
         }
 
+        // If the root is bigger than value
+        // Go right and traverse that smaller tree
         if (n.getVal() > val) {
             return helperSearch(n.getLeft(), val);
         }
 
+        // If we went throguh everything, and the value does not exist, return false
         return false;
 
     }
@@ -75,23 +85,31 @@ public class BST {
     /**
      * @return ArrayList of BSTNodes in inorder
      */
+
+    // Go inorder traversal
     public ArrayList<BSTNode> getInorder() {
         // TODO: Complete inorder traversal
-//        helperInorder(root);
-        return null;
+        // Create the list which has all the values inorder
+        ArrayList<BSTNode> list = new ArrayList<>();
+        helperInorder(root, list);
+        return list;
     }
 
-    public void helperInorder(BSTNode n) {
+    // Helper function
+    public void helperInorder(BSTNode n, ArrayList<BSTNode> array) {
+        // If the tree is now empty underneath, stop going through
         if (n == null) {
-            System.out.print(n + " ");
+            return;
         }
 
-        helperInorder(n.getLeft());
-        System.out.print(n + " ");
+        // Go down all the way left, calling function over and over
+        // Add all of the left
+        helperInorder(n.getLeft(), array);
+        // Add the root
+        array.add(n);
+        // Go down the tree adding everything that is on the right
+        helperInorder(n.getRight(), array);
 
-        if (n.getRight() != null) {
-            helperInorder(n.getRight());
-        }
     }
 
     /**
@@ -99,7 +117,26 @@ public class BST {
      */
     public ArrayList<BSTNode> getPreorder() {
         // TODO: Complete preorder traversal
-        return null;
+        // Gets the preorder list by creating another list
+        ArrayList<BSTNode> list2 = new ArrayList<>();
+        helperPreorder(root, list2);
+        return list2;
+    }
+
+    public void helperPreorder(BSTNode n, ArrayList<BSTNode> array) {
+        // If tree is empty, then return since the tree is over
+        if (n == null) {
+            return;
+        }
+        // Add the root first
+        array.add(n);
+
+        // Traverse the left subtree
+        helperPreorder(n.getLeft(), array);
+
+        // Traverse the right subtree
+        helperPreorder(n.getRight(), array);
+
     }
 
     /**
@@ -107,7 +144,26 @@ public class BST {
      */
     public ArrayList<BSTNode> getPostorder() {
         // TODO: Complete postorder traversal
-        return null;
+        // Creates a list and calls helper to get postover
+        ArrayList<BSTNode> list3 = new ArrayList<>();
+        helperPostorder(root, list3);
+        return list3;
+    }
+
+    // Helper function
+    public void helperPostorder(BSTNode n, ArrayList<BSTNode> array) {
+        // If tree is empty, return
+        if (n == null) {
+            return;
+        }
+        // Add the left side first, going all the way down
+        helperPostorder(n.getLeft(), array);
+
+        // Add the right side now to the list
+        helperPostorder(n.getRight(), array);
+        // Add the root
+        array.add(n);
+
     }
 
     /**
@@ -117,7 +173,36 @@ public class BST {
      * @param val The value ot insert
      */
     public void insert(int val) {
+        // Calls the helper
+        root = helperInsert(root, val);
         // TODO: Complete insert
+    }
+
+    public BSTNode helperInsert(BSTNode n, int val) {
+        // If the val equals the root, then just return the tree we already have
+        // No duplicates are allowed
+        if (n == null) {
+            return new BSTNode(val);
+        }
+
+        if (val == n.getVal()) {
+            return n;
+        }
+
+        // If the root is bigger than value, then go left
+        if (n.getVal() > val) {
+            // Goes left and recalls with function by going left
+            n.setLeft(helperInsert(n.getLeft(), val));
+        }
+        else{
+            // Otherwise go right and look at trees
+            n.setRight(helperInsert(n.getRight(), val));
+        }
+
+        // return the new tree
+
+        return n;
+
     }
 
     /**
@@ -141,21 +226,21 @@ public class BST {
         System.out.println("\nSearching for 22 in the tree");
         System.out.println(tree.search(22));
 
-//        System.out.println("\nPreorder traversal of binary tree is");
-//        ArrayList<BSTNode> sol = tree.getPreorder();
-//        printNodes(sol);
-
-        System.out.println("\nInorder traversal of binary tree is");
-        ArrayList<BSTNode> sol = tree.getInorder();
+        System.out.println("\nPreorder traversal of binary tree is");
+        ArrayList<BSTNode> sol = tree.getPreorder();
         printNodes(sol);
 
-//        System.out.println("\nPostorder traversal of binary tree is");
-//        sol = tree.getPostorder();
-//        printNodes(sol);
-//
-//        tree.insert(8);
-//        System.out.println("\nInorder traversal of binary tree is");
-//        sol = tree.getInorder();
-//        printNodes(sol);
+        System.out.println("\nInorder traversal of binary tree is");
+        ArrayList<BSTNode> sol2 = tree.getInorder();
+        printNodes(sol2);
+
+        System.out.println("\nPostorder traversal of binary tree is");
+        sol = tree.getPostorder();
+        printNodes(sol);
+
+        tree.insert(8);
+        System.out.println("\nInorder traversal of binary tree is");
+       sol = tree.getInorder();
+       printNodes(sol);
     }
 }
